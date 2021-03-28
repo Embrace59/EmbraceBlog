@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {ConfigModule} from '@nestjs/config'
-import {TypeOrmModule} from '@nestjs/typeorm'
+import { ConfigModule } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './user/user.module';
-import {AuthModule} from './auth/auth.module'
+import { AuthModule } from './auth/auth.module'
 /**
  * @ 开头表示这是装饰器，是对下面的class的装饰
  * @ Module指这个class是一个module

@@ -3,11 +3,14 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { User } from '../models/user.interface';
 import { UserService } from '../service/user.service';
+import { CreateUserDto } from '../models/dto/CreateUser.dto';
+import { LoginUserDto } from '../models/dto/LoginUser.dto';
+
 
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService) { }
-    
+    /*
     @Post()
     create(@Body()user:User):Observable<User | Object> {
         return this.userService.create(user).pipe(
@@ -15,6 +18,15 @@ export class UserController {
             catchError(err=>of({error:err.message}))
         )
     }
+    */
+    @Post()
+    create(@Body() createdUserDto: CreateUserDto): Observable<User> {
+        let result = this.userService.createA(createdUserDto);
+        console.log("result: ")
+        console.log(result)
+        return result
+    }
+
 
     @Post('login')
     login(@Body() user:User):Observable<Object>{

@@ -14,7 +14,7 @@ export class AuthService{
         //jwtService.signAsync(): returns the JsonWebToken as string
         return from(this.jwtService.signAsync({user}))
     }
-
+    
     /**
      * hash算法加密password
      * @param password 

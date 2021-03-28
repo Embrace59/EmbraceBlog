@@ -6,6 +6,8 @@ import { UserEntity } from '../models/user.entity';
 import { User } from '../models/user.interface';
 import { AuthService } from 'src/auth/services/auth.service';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { CreateUserDto } from '../models/dto/CreateUser.dto';
+
 
 @Injectable()
 export class UserService {
@@ -32,6 +34,41 @@ export class UserService {
                     }),
                     catchError(err => throwError(err))
                 )
+            })
+        )
+    }
+
+    createA(createdUserDto: CreateUserDto): Observable<User> {
+        return this.mailExists(createdUserDto.email).pipe(
+            switchMap((exists: boolean) => {
+                if (!exists) {
+                    return this.authService.hashPassword(createdUserDto.password).pipe(
+                        switchMap((passwordHash: string) => {
+                            // Overwrite the user password with the hash, to store it in the db
+                            createdUserDto.password = passwordHash;
+                            return from(this.userRepository.save(createdUserDto)).pipe(
+                                map((savedUser: User) => {
+                                    const { password, ...user } = savedUser;
+                                    console.log('user.service.ts 52')
+                                    console.log(user)
+                                    return user;
+                                })
+                            )
+                        })
+                    )
+                } 
+            })
+        )
+    }
+
+    private mailExists(email: string): Observable<boolean>{
+        return from(this.userRepository.findOne({ email })).pipe(
+            map((user: User) => {
+                if (user) {
+                    return true;
+                } else {
+                    return false;
+                }
             })
         )
     }
